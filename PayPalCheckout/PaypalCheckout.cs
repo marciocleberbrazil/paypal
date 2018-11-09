@@ -4,48 +4,28 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace PayPalCheckout
 {
-    public class PaypalCheckout
+    public class PayPalCheckout
     {
-        [JsonProperty("intent")]
-        [JsonConverter(typeof(IntentConverter))]
-        public Intent Intent { get; set; }
+        string ClientId { get; set; }
+        string ClientSecret { get; set; }
+        private string PayPalURL { get; set; }
 
-        [JsonProperty("payer")]
-        public PayPalPaymentMethod Payer { get; set; }
-
-        [JsonProperty(PropertyName = "transactions")]
-        public List<PayPalTransaction> Transactions { get; set; }
-
-        [JsonProperty(PropertyName = "note_to_payer")]
-        public string NoteToPayer { get; set; }
-
-        [JsonProperty(PropertyName = "redirect_urls")]
-        public PayPalRedirects RedirectUrls { get; set; }
-
-        public PaypalCheckout(Intent intent, PaymentMethod paymentMethod, string noteToPayer, PayPalTransaction transaction)
+        /*public PayPalAccessTokenResponse GetAccessToken()
         {
-            Intent = intent;
-            Payer = new PayPalPaymentMethod(){ PaymentMethod = paymentMethod };
-            NoteToPayer = noteToPayer;
-            Transactions = new List<PayPalTransaction> {transaction};
+            const string ENDPOINT = "/oauth2/token";
 
-
-            var config = (PayPalCheckoutSection)ConfigurationManager.GetSection("payPalCheckout");
-
-            RedirectUrls = new PayPalRedirects()
-            {
-                ReturnUrl = config.ReturnUrl.Value,
-                CancelUrl = config.CancelUrl.Value
-            };
-        }
-
-        public PaypalCheckout()
-        {
             
+        }*/
+
+        public PayPalCheckout()
+        {
+            var config = (PayPalCheckoutSection)ConfigurationManager.GetSection("payPalCheckout");
+            ClientId = config.ClientId.Value;
+            ClientSecret = config.ClientSecret.Value;
+            PayPalURL = config.Live.Value ? "https://api.paypal.com/v1" : "https://api.sandbox.paypal.com/v1";
         }
     }
 }

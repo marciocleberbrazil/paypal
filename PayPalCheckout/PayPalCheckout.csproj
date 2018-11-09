@@ -45,17 +45,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnumToJsonConverter.cs" />
-    <Compile Include="GetAccessToken.cs" />
+    <Compile Include="PayPalAccessTokenResponse.cs" />
     <Compile Include="PayPalAmount.cs" />
     <Compile Include="PayPalAmountDetails.cs" />
+    <Compile Include="PayPalPaymentResponse.cs" />
     <Compile Include="PayPalEnums.cs" />
+    <Compile Include="PayPalErrorResponse.cs" />
     <Compile Include="PayPalItemList.cs" />
-    <Compile Include="PaypalCheckout.cs" />
+    <Compile Include="PaypalPayment.cs" />
     <Compile Include="PayPalCheckoutSection.cs" />
     <Compile Include="PayPalItem.cs" />
+    <Compile Include="PayPalLinkDescription.cs" />
     <Compile Include="PayPalPaymentMethod.cs" />
     <Compile Include="PayPalPaymentOption.cs" />
     <Compile Include="PayPalRedirects.cs" />
+    <Compile Include="PayPalCheckout.cs" />
     <Compile Include="PayPalShippingAddress.cs" />
     <Compile Include="PayPalTransaction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

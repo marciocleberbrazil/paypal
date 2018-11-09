@@ -52,6 +52,17 @@ namespace PayPalCheckout
             set
             { this["cancelUrl"] = value; }
         }
+
+        [ConfigurationProperty("live")]
+        public LiveElement Live
+        {
+            get
+            {
+                return (LiveElement)this["live"];
+            }
+            set
+            { this["live"] = value; }
+        }
     }
 
     internal class ClientIdElement : ConfigurationElement
@@ -110,6 +121,22 @@ namespace PayPalCheckout
             get
             {
                 return (String)this["value"];
+            }
+            set
+            {
+                this["value"] = value;
+            }
+        }
+    }
+
+    internal class LiveElement : ConfigurationElement
+    {
+        [ConfigurationProperty("value", IsRequired = true)]
+        public Boolean Value
+        {
+            get
+            {
+                return (Boolean)this["value"];
             }
             set
             {

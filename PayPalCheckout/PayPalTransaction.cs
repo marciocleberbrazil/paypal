@@ -21,37 +21,50 @@ namespace PayPalCheckout
         [JsonProperty(PropertyName = "payment_options")]
         public PayPalPaymentOption PaymentOptions { get; set; }
 
+        [JsonProperty(PropertyName = "amount")]
         public PayPalAmount Amount { get; set; }
+
+
+        public PayPalAmount CalcAmount(PayPalCurrency currency, List<PayPalItem> items, double shippingPrice)
+        {
+            try
+            {
+                double subTotal = 0;
+                double taxes = 0;
+                foreach (var item in items)
+                {
+                    //calc subtotal
+                    subTotal += item.Price * item.Quantity;
+
+                    //calc taxes
+                    taxes += item.Tax * item.Quantity;
+                }
+
+                return new PayPalAmount
+                {
+                    Total = shippingPrice + subTotal + taxes,
+                    Currency = currency,
+                    Details = new PayPalAmountDetails()
+                    {
+                        Subtotal = subTotal,
+                        Tax = taxes,
+                        Shipping = shippingPrice
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public PayPalTransaction(List<PayPalItem> items, PayPalShippingAddress shippingAddress, string invoiceNumber, string transactionDescription, AllowedPaymentMethod allowedPaymentMethod, PayPalCurrency currency, double shippingPrice)
         {
             ItemList = new PayPalItemList {Items = items, ShippingAddress = shippingAddress};
             InvoiceNumber = invoiceNumber;
             Description = transactionDescription;
             PaymentOptions = new PayPalPaymentOption {AllowedPaymentMethod = allowedPaymentMethod};
-
-            double subTotal = 0;
-            double taxes = 0;
-            foreach (var item in items)
-            {
-                subTotal += item.Price * item.Quantity;
-                taxes += item.Tax;
-            }
-
-            var total = subTotal + shippingPrice + taxes;
-
-            var details = new PayPalAmountDetails
-            {
-                Subtotal = subTotal,
-                Tax = taxes,
-                Shipping = shippingPrice
-            };
-
-            Amount = new PayPalAmount
-            {
-                Total = total,
-                Currency = currency,
-                Details = details
-            };
+            Amount = CalcAmount(currency, items, shippingPrice);
         }
 
         public PayPalTransaction()

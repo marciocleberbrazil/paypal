@@ -18,10 +18,5 @@ namespace PayPalCheckout
 
         [JsonProperty("details")]
         public PayPalAmountDetails Details { get; set; }
-
-        public PayPalAmount()
-        {
-            Details = new PayPalAmountDetails();
-        }
     }
 }

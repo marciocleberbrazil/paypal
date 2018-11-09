@@ -22,7 +22,8 @@ namespace PayPal.Controllers
                     Description = "That's my description of my product",
                     Price = 50,
                     Sku = "1001",
-                    Currency = PayPalCurrency.AUD
+                    Currency = PayPalCurrency.AUD,
+                    Tax = 3.44
                 },
                 new PayPalItem()
                 {
@@ -102,13 +103,13 @@ namespace PayPal.Controllers
                 shippingPrice);
 
 
-            var paypal = new PaypalCheckout(
+            var payment = new PaypalPayment(
                 Intent.SALE,
                 PaymentMethod.PAYPAL,
                 "Contact us for any questions on your order.", 
                 transaction);
 
-            ViewBag.Output = JsonConvert.SerializeObject(paypal);
+            ViewBag.Output = JsonConvert.SerializeObject(payment);
 
             
 
