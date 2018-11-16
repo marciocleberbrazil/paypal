@@ -24,6 +24,9 @@ namespace PayPalCheckout
         [JsonProperty(PropertyName = "amount")]
         public PayPalAmount Amount { get; set; }
 
+        [JsonProperty(PropertyName = "payee")]
+        public PayPalPayee Payee { get; set; }
+
 
         public PayPalAmount CalcAmount(PayPalCurrency currency, List<PayPalItem> items, double shippingPrice)
         {

@@ -80,8 +80,23 @@ namespace PayPalCheckout
 
             switch (messageTransportResponseStatus)
             {
+                case PaymentMethod.CREDIT_CARD:
+                    writer.WriteValue("credit_card");
+                    break;
                 case PaymentMethod.PAYPAL:
                     writer.WriteValue("paypal");
+                    break;
+                case PaymentMethod.PAY_UPON_INVOICE:
+                    writer.WriteValue("pay_upon_invoice");
+                    break;
+                case PaymentMethod.CARRIER:
+                    writer.WriteValue("carrier");
+                    break;
+                case PaymentMethod.ALTERNATE_PAYMENT:
+                    writer.WriteValue("alternate_payment");
+                    break;
+                case PaymentMethod.BANK:
+                    writer.WriteValue("bank");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -257,6 +272,38 @@ namespace PayPalCheckout
             var enumString = (string)reader.Value;
 
             return Enum.Parse(typeof(PayPalLinkMethod), enumString, true);
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(string);
+        }
+    }
+
+    public class PayPalStatusConverter : JsonConverter
+    {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            var messageTransportResponseStatus = (PayPalStatus)value;
+
+            switch (messageTransportResponseStatus)
+            {
+                case PayPalStatus.VERIFIED:
+                    writer.WriteValue("VERIFIED");
+                    break;
+                case PayPalStatus.UNVERIFIED:
+                    writer.WriteValue("UNVERIFIED");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            var enumString = (string)reader.Value;
+
+            return Enum.Parse(typeof(PayPalStatus), enumString, true);
         }
 
         public override bool CanConvert(Type objectType)

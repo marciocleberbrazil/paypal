@@ -20,7 +20,12 @@ namespace PayPalCheckout
 
     public enum PaymentMethod
     {
-        PAYPAL
+        CREDIT_CARD,
+        PAYPAL,
+        PAY_UPON_INVOICE,
+        CARRIER,
+        ALTERNATE_PAYMENT,
+        BANK
     }
 
     public enum PayPalCurrency
@@ -57,5 +62,11 @@ namespace PayPalCheckout
         OPTIONS,
         PATCH,
         REDIRECT
+    }
+
+    public enum PayPalStatus
+    {
+        VERIFIED,
+        UNVERIFIED
     }
 }

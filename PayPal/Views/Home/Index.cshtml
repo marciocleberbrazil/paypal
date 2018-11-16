@@ -17,6 +17,9 @@
         <hr/>
     }
 
+
+    <input type="text" name="invoiceNumber" value="001" placeholder="Invoice Number"><br />
+    <hr/>
     <input type="text" name="RecipientName" value="Marcio Barboza" placeholder="Recipient Name" ><br/>
     <input type="text" name="Line1" value="5-9 Bellevue Street" placeholder="Line 1"><br />
     <input type="text" name="Line2" value="Unit 8" placeholder="Line 2"><br />
@@ -30,5 +33,6 @@
     <button>Payment</button>
 
 
+    <h1>Error: @ViewBag.Error</h1>
     <pre>@ViewBag.Output</pre>
 }

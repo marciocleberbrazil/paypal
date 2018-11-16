@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
@@ -11,6 +12,7 @@ namespace PayPal.Controllers
     public class HomeController : Controller
     {
         private List<PayPalItem> products;
+        private PayPalCheckout.PayPalCheckout paypalCheckout;
 
         public HomeController()
         {
@@ -58,6 +60,24 @@ namespace PayPal.Controllers
                     Currency = PayPalCurrency.AUD
                 }
             };
+
+            paypalCheckout = new PayPalCheckout.PayPalCheckout();
+        }
+
+        public async Task<ActionResult> FinishCheckout(string paymentId, string PayerID)
+        {
+            var executeApproved = await paypalCheckout.ExecuteApproved(paymentId, PayerID);
+
+            if (executeApproved.Error == null && executeApproved.State == PayPalState.APPROVED)
+            {
+                ViewBag.Result = "Payment approved";
+            }
+            else
+            {
+                ViewBag.Result = $"Error while process your payment: {executeApproved.Error.Message}";
+            }
+
+            return View();
         }
 
         public ActionResult Index()
@@ -66,7 +86,7 @@ namespace PayPal.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(FormCollection form)
+        public async Task<ActionResult> Index(FormCollection form)
         {
             if (form["selectedProducts"] == null) return View(products);
             var skuArray = form["selectedProducts"].Length > 0 ? form["selectedProducts"].Split(',') : new string[] { };
@@ -96,7 +116,7 @@ namespace PayPal.Controllers
             var transaction = new PayPalTransaction(
                 selectedProducts,
                 shippingAddress,
-                "48787589673",
+                form["invoiceNumber"],
                 "The payment transaction description.",
                 AllowedPaymentMethod.INSTANT_FUNDING_SOURCE,
                 PayPalCurrency.AUD,
@@ -109,12 +129,18 @@ namespace PayPal.Controllers
                 "Contact us for any questions on your order.", 
                 transaction);
 
-            ViewBag.Output = JsonConvert.SerializeObject(payment);
+            var createPayment = await paypalCheckout.CreatePayment(payment);
 
-            
-
-            /*Response.Write($"<p>Mano: {paypal.AccessToken}</p>");
-            Response.Write($"<p>Teste: {form["selectedProducts"]}</p>");*/
+            if (createPayment.Error == null)
+            {
+                var redirectUrl = createPayment.Links.FirstOrDefault(x => x.Method == PayPalLinkMethod.REDIRECT)?.Href;
+                Response.Redirect(redirectUrl, true);
+            }
+            else
+            {
+                ViewBag.Error = createPayment.Error.Message;
+                ViewBag.Output = JsonConvert.SerializeObject(payment);
+            }
 
             return View(products);
         }

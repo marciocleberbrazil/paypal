@@ -26,6 +26,14 @@ namespace PayPalCheckout
         [JsonProperty(PropertyName = "links")]
         public List<PayPalLinkDescription> Links { get; set; }
 
+        public PayPalErrorResponse Error { get; set; }
+
+        [JsonProperty("cart")]
+        public string Cart { get; set; }
+
+        [JsonProperty("payer")]
+        public PayPalPayer Payer { get; set; }
+
         public PayPalPaymentResponse()
         {
             Links = new List<PayPalLinkDescription>();
