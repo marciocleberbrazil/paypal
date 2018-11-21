@@ -55,7 +55,7 @@ namespace PayPalCheckout
                 var accessTokenResponse = await GetAccessToken();
 
                 if(!string.IsNullOrEmpty(accessTokenResponse.Error))
-                    throw new Exception("Error while request a PayPal token");
+                    throw new Exception(accessTokenResponse.Error);
 
                 using (var client = new HttpClient())
                 {
@@ -91,6 +91,10 @@ namespace PayPalCheckout
 
                 using (var client = new HttpClient())
                 {
+                    if(string.IsNullOrEmpty(ClientId)) return new PayPalAccessTokenResponse() { Error = "It is missing the the ClientId key" };
+
+                    if (string.IsNullOrEmpty(ClientSecret)) return new PayPalAccessTokenResponse() { Error = "It is missing the the ClientSecret key" };
+
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     client.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("en_US"));
                     var bytes = Encoding.UTF8.GetBytes($"{ClientId}:{ClientSecret}");
@@ -105,7 +109,10 @@ namespace PayPalCheckout
                     client.BaseAddress = BaseUrl;
 
                     var responseMessage = await client.PostAsync("oauth2/token", new FormUrlEncodedContent(keyValues));
-                    return await responseMessage.Content.ReadAsAsync<PayPalAccessTokenResponse>();
+                    if(responseMessage.IsSuccessStatusCode)
+                        return await responseMessage.Content.ReadAsAsync<PayPalAccessTokenResponse>();
+
+                    return new PayPalAccessTokenResponse() { Error = "Error while getting the Access Token" }; ;
                 }
             }
             catch (Exception e)
