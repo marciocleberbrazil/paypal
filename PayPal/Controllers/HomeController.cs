@@ -93,6 +93,7 @@ namespace PayPal.Controllers
             var selectedProducts = skuArray.Select(item => products.FirstOrDefault(x => x.Sku == item)).Where(product => product != null).ToList();
 
             double shippingPrice = 10;
+            double shippingDiscount = 10;
 
             //taking the quantities
             foreach (var item in selectedProducts)
@@ -120,7 +121,8 @@ namespace PayPal.Controllers
                 "The payment transaction description.",
                 AllowedPaymentMethod.INSTANT_FUNDING_SOURCE,
                 PayPalCurrency.AUD,
-                shippingPrice);
+                shippingPrice,
+                shippingDiscount);
 
 
             var payment = new PaypalPayment(
@@ -139,6 +141,8 @@ namespace PayPal.Controllers
             else
             {
                 ViewBag.Error = createPayment.Error.Message;
+                ViewBag.ErrorDetails = createPayment.Error.Details;
+
                 ViewBag.Output = JsonConvert.SerializeObject(payment);
             }
 

@@ -12,6 +12,7 @@ namespace PayPalCheckout.Tests
     {
         private List<PayPalItem> items;
         private double shippingPrice;
+        private double shippingDiscount;
         private PayPalTransaction paypalTransaction;
 
         [TestInitialize]
@@ -20,6 +21,7 @@ namespace PayPalCheckout.Tests
             paypalTransaction = new PayPalTransaction();
 
             shippingPrice = 10;
+            shippingDiscount = 0;
 
             items = new List<PayPalItem>
             {
@@ -60,7 +62,7 @@ namespace PayPalCheckout.Tests
         public void Check_Total()
         {
             var expected = 328.1;
-            var amount = paypalTransaction.CalcAmount(PayPalCurrency.AUD, items, shippingPrice);
+            var amount = paypalTransaction.CalcAmount(PayPalCurrency.AUD, items, shippingPrice, shippingDiscount);
             Assert.AreEqual(expected, amount.Total, "The value should be 328.1");
         }
 
@@ -68,7 +70,7 @@ namespace PayPalCheckout.Tests
         public void Check_SubTotal()
         {
             var expected = 310;
-            var amount = paypalTransaction.CalcAmount(PayPalCurrency.AUD, items, shippingPrice);
+            var amount = paypalTransaction.CalcAmount(PayPalCurrency.AUD, items, shippingPrice, shippingDiscount);
             Assert.AreEqual(expected, amount.Details.Subtotal, "The value should be 310");
         }
 
@@ -76,7 +78,7 @@ namespace PayPalCheckout.Tests
         public void Check_Shipping()
         {
             var expected = 10;
-            var amount = paypalTransaction.CalcAmount(PayPalCurrency.AUD, items, shippingPrice);
+            var amount = paypalTransaction.CalcAmount(PayPalCurrency.AUD, items, shippingPrice, shippingDiscount);
             Assert.AreEqual(expected, amount.Details.Shipping, "The value should be 10");
         }
 
@@ -84,7 +86,7 @@ namespace PayPalCheckout.Tests
         public void Check_Tax()
         {
             var expected = 8.1;
-            var amount = paypalTransaction.CalcAmount(PayPalCurrency.AUD, items, shippingPrice);
+            var amount = paypalTransaction.CalcAmount(PayPalCurrency.AUD, items, shippingPrice, shippingDiscount);
             Assert.AreEqual(expected, amount.Details.Tax, "The value should be 8.1");
         }
     }

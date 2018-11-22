@@ -1,4 +1,5 @@
-﻿@model List<PayPalCheckout.PayPalItem>
+﻿@using PayPalCheckout
+@model List<PayPalItem>
 @{
     ViewBag.Title = "Home Page";
 }
@@ -32,7 +33,15 @@
 
     <button>Payment</button>
 
-
-    <h1>Error: @ViewBag.Error</h1>
-    <pre>@ViewBag.Output</pre>
+    if (ViewBag.ErrorDetails != null)
+     {
+         <h1>Error: @ViewBag.Error</h1>
+         <ul>
+             @foreach (var error in (List<PayPalErrorDetailResponse>) ViewBag.ErrorDetails)
+             {
+                 <li>@error.Issue</li>
+             }
+         </ul>
+         <pre>@ViewBag.Output</pre>
+     }
 }

@@ -52,6 +52,7 @@
     <Compile Include="PayPalAccessTokenResponse.cs" />
     <Compile Include="PayPalAmount.cs" />
     <Compile Include="PayPalAmountDetails.cs" />
+    <Compile Include="PayPalErrorDetailResponse.cs" />
     <Compile Include="PayPalPayee.cs" />
     <Compile Include="PayPalPayer.cs" />
     <Compile Include="PayPalPayerInfo.cs" />

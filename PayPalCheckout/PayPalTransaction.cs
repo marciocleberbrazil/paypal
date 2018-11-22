@@ -28,7 +28,7 @@ namespace PayPalCheckout
         public PayPalPayee Payee { get; set; }
 
 
-        public PayPalAmount CalcAmount(PayPalCurrency currency, List<PayPalItem> items, double shippingPrice)
+        public PayPalAmount CalcAmount(PayPalCurrency currency, List<PayPalItem> items, double shippingPrice, double shippingDiscount)
         {
             try
             {
@@ -45,13 +45,14 @@ namespace PayPalCheckout
 
                 return new PayPalAmount
                 {
-                    Total = shippingPrice + subTotal + taxes,
+                    Total = (shippingPrice - shippingDiscount) + subTotal + taxes,
                     Currency = currency,
                     Details = new PayPalAmountDetails()
                     {
                         Subtotal = subTotal,
                         Tax = taxes,
-                        Shipping = shippingPrice
+                        Shipping = shippingPrice,
+                        ShippingDiscount = shippingDiscount
                     }
                 };
             }
@@ -61,13 +62,13 @@ namespace PayPalCheckout
             }
         }
 
-        public PayPalTransaction(List<PayPalItem> items, PayPalShippingAddress shippingAddress, string invoiceNumber, string transactionDescription, AllowedPaymentMethod allowedPaymentMethod, PayPalCurrency currency, double shippingPrice)
+        public PayPalTransaction(List<PayPalItem> items, PayPalShippingAddress shippingAddress, string invoiceNumber, string transactionDescription, AllowedPaymentMethod allowedPaymentMethod, PayPalCurrency currency, double shippingPrice, double shippingDiscount)
         {
             ItemList = new PayPalItemList {Items = items, ShippingAddress = shippingAddress};
             InvoiceNumber = invoiceNumber;
             Description = transactionDescription;
             PaymentOptions = new PayPalPaymentOption {AllowedPaymentMethod = allowedPaymentMethod};
-            Amount = CalcAmount(currency, items, shippingPrice);
+            Amount = CalcAmount(currency, items, shippingPrice, shippingDiscount);
         }
 
         public PayPalTransaction()

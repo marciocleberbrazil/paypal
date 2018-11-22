@@ -20,5 +20,8 @@ namespace PayPalCheckout
 
         [JsonProperty("debug_id")]
         public string DebugId { get; set; }
+
+        [JsonProperty("details")]
+        public List<PayPalErrorDetailResponse> Details { get; set; }
     }
 }
