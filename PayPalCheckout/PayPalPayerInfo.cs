@@ -24,6 +24,9 @@ namespace PayPalCheckout
         [JsonProperty("country_code")]
         public string CountryCode { get; set; }
 
+        [JsonProperty("phone")]
+        public string Phone { get; set; }
+
         [JsonProperty("shipping_address")]
         public PayPalShippingAddress ShippingAddress { get; set; }
     }
