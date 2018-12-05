@@ -15,7 +15,7 @@ namespace PayPalCheckout
         string ClientSecret { get; set; }
         private Uri BaseUrl { get; set; }
 
-        public async Task<PayPalPaymentResponse> ExecuteApproved(string paymentId, string payerID)
+        public async Task<PayPalPaymentResponse> ExecuteApproved(string paymentId, string payerID, string errorCode = "")
         {
             try
             {
@@ -29,6 +29,10 @@ namespace PayPalCheckout
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     client.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("en_US"));
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessTokenResponse.AccessToken);
+
+                    if (!string.IsNullOrEmpty(errorCode))
+                        client.DefaultRequestHeaders.Add("PayPal-Mock-Response", "{\"mock_application_codes\": \"" + errorCode + "\"}");
+
                     client.BaseAddress = BaseUrl;
                     var response = await client.PostAsJsonAsync($"payments/payment/{paymentId}/execute", new { payer_id = payerID });
 
@@ -48,7 +52,7 @@ namespace PayPalCheckout
             }
         }
 
-        public async Task<PayPalPaymentResponse> CreatePayment(PaypalPayment paypalPayment)
+        public async Task<PayPalPaymentResponse> CreatePayment(PaypalPayment paypalPayment, string errorCode = "")
         {
             try
             {
@@ -62,6 +66,10 @@ namespace PayPalCheckout
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     client.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("en_US"));
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessTokenResponse.AccessToken);
+
+                    if(!string.IsNullOrEmpty(errorCode))
+                        client.DefaultRequestHeaders.Add("PayPal-Mock-Response", "{\"mock_application_codes\": \"" + errorCode + "\"}");
+
                     client.BaseAddress = BaseUrl;
                     var response = await client.PostAsJsonAsync("payments/payment", paypalPayment);
 
