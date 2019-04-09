@@ -16,6 +16,7 @@ namespace PayPalCheckout
         [JsonConverter(typeof(PayPalStateConverter))]
         public PayPalState State { get; set; }
 
+
         [JsonProperty("failure_reason")]
         [JsonConverter(typeof(PayPalFailureReasonConverter))]
         public PayPalFailureReason FailureReason { get; set; }
